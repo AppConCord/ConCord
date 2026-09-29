@@ -1,0 +1,35 @@
+name: concord
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      CONCORD_DATABASE_PATH: /var/lib/concord/concord.db
+      CONCORD_HTTP_ADDRESS: :8080
+      CONCORD_SESSION_TTL: 720h
+      CONCORD_SHUTDOWN_TIMEOUT: 10s
+      CONCORD_SNOWFLAKE_NODE_ID: 0
+    ports:
+      - "${CONCORD_HTTP_PORT:-8080}:8080"
+    restart: unless-stopped
+    user: "${CONCORD_UID:-1000}:${CONCORD_GID:-1000}"
+    volumes:
+      - type: bind
+        source: ./data
+        target: /var/lib/concord
+
+  migrate:
+    profiles: ["tools"]
+    build:
+      context: .
+      dockerfile: database/Dockerfile
+    environment:
+      CONCORD_DATABASE_PATH: /var/lib/concord/concord.db
+      CONCORD_MIGRATIONS_DIR: /app/migrations
+    user: "${CONCORD_UID:-1000}:${CONCORD_GID:-1000}"
+    volumes:
+      - type: bind
+        source: ./data
+        target: /var/lib/concord
