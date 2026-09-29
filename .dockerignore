@@ -1,0 +1,9 @@
+.git
+.agents
+data/*
+!data/.gitkeep
+frontend/node_modules
+frontend/dist
+**/*.log
+**/coverage*
+**/*.test

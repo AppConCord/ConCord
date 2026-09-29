@@ -20,6 +20,13 @@ bin/
 coverage/
 coverage.*
 
+# Runtime database files
+data/*
+!data/.gitkeep
+*.db
+*.db-shm
+*.db-wal
+
 # Logs
 logs/
 *.log
